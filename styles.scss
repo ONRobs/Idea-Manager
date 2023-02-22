@@ -15,16 +15,26 @@ body {
 	padding: 20px;
 }
 
-.block_center {
-    max-width: 828px;
-    width: 50%;
-    height: 50%;
+.center{
     position: absolute;
     top:0;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
+}
+
+.block_form {
+    max-width: 828px;
+    width: 50%;
+    height: 50%;
+    @extend .center
+}
+
+.block_table {
+    width: 80%;
+    height: 90%;
+    @extend .center
 }
 
 .heading {
@@ -45,7 +55,7 @@ body {
     margin: 24px 0px;
 }
 
-.input {
+.input-block {
 	display: flex;
 	width: 100%;
 	min-width: 400px;
@@ -76,6 +86,8 @@ input, textarea {
 
 .rating {
     justify-content: left;
+    min-width: none;
+    width: 90%;
 }
 
 input::placeholder, textarea::placeholder {
@@ -88,8 +100,9 @@ input::placeholder, textarea::placeholder {
     text-align: start;
 }
 
-input[type=submit]{
+input[type=submit],input[type=button]{
     width: 208px;
+    min-width: 124px;
 	padding: 0px 0px 0px 0px;
 	justify-content: center;
 	color: $button-text;
