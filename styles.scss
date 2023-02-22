@@ -5,6 +5,7 @@ $button-border:#3469E5;
 $button-text: white;
 $font: Segoe UI;
 $font-size: 26px;
+$heading-size: 48px;
 
 body {
 	font-family: $font, sans-serif;
@@ -15,6 +16,7 @@ body {
 }
 
 .block_center {
+    max-width: 828px;
     width: 50%;
     height: 50%;
     position: absolute;
@@ -26,8 +28,12 @@ body {
 }
 
 .heading {
-	font-size: 48px;
-	padding: 0px 82px 0px 32px;
+	font-size: $heading-size;
+	padding: 0px 0px 0px 32px;
+}
+
+.sub-heading {
+    padding: 0px 82px 0px 0px;
 }
 
 .bold-italic{
@@ -35,13 +41,18 @@ body {
 	font-style: italic;
 }
 
+.text{
+    margin: 24px 0px;
+}
+
 .input {
 	display: flex;
-	width: 90%;
+	width: 100%;
 	min-width: 400px;
-	max-width: 828px;
 	height: 48px;
 	margin: 24px 0px;
+    justify-content: space-between;
+    align-items: center;
 }
 
 input, textarea {
@@ -55,6 +66,16 @@ input, textarea {
 	font-size: $font-size;
 	border-radius: 7px;
 	border-width: 2px;
+}
+
+.rating-input {
+    width: 72px;
+    padding: 2%;
+    text-align: center;
+}
+
+.rating {
+    justify-content: left;
 }
 
 input::placeholder, textarea::placeholder {
