@@ -1,0 +1,77 @@
+$light-color: #BBBBBB;
+$dark-color:#707070;
+$button-color: #608FFC;
+$button-border:#3469E5;
+$button-text: white;
+$font: Segoe UI;
+$font-size: 26px;
+
+body {
+	font-family: $font, sans-serif;
+	font-weight: regular;
+	font-size: $font-size;
+	color: $dark-color;
+	padding: 20px;
+}
+
+.block {
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.heading {
+	font-size: 48px;
+	padding: 0px 82px 0px 32px;
+}
+
+.bold-italic{
+	font-weight: bold;
+	font-style: italic;
+}
+
+.input {
+	display: flex;
+	width: 90%;
+	min-width: 400px;
+	max-width: 828px;
+	height: 48px;
+	margin: 24px 0px;
+}
+
+input, textarea {
+    display: inline-flex;
+	box-sizing: border-box;
+	padding: 0px 0px 0px 12px;
+	margin: 12px;
+	height: 100%;
+	width: 100%;
+	font-family: $font;
+	font-size: $font-size;
+	border-radius: 7px;
+	border-width: 2px;
+}
+
+input::placeholder, textarea::placeholder {
+    font: $font-size $font;
+    color: $light-color;
+}
+
+.description {
+    height: 192px;
+    text-align: start;
+}
+
+input[type=submit]{
+    width: 208px;
+	padding: 0px 0px 0px 0px;
+	justify-content: center;
+	color: $button-text;
+	background-color: $button-color;
+	border-color: $button-border;
+}
