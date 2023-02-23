@@ -9,12 +9,12 @@ $heading-size: 48px;
 
 body {
 	font-family: $font, sans-serif;
-	font-weight: regular;
 	font-size: $font-size;
 	color: $dark-color;
 	padding: 20px;
 }
 
+// lapā centrē bloku
 .center{
     position: absolute;
     top:0;
@@ -24,6 +24,7 @@ body {
     margin: auto;
 }
 
+// index.html un rate.html galvenā bloka lielums un novietojums
 .block_form {
     max-width: 828px;
     width: 50%;
@@ -31,30 +32,30 @@ body {
     @extend .center
 }
 
-.block_table {
-    width: 80%;
-    height: 90%;
-    @extend .center
-}
 
+// virsrakstu formatējums
 .heading {
 	font-size: $heading-size;
 	padding: 0px 0px 0px 32px;
 }
 
+// apakšvirsrakstu formatējums
 .sub-heading {
     padding: 0px 82px 0px 0px;
 }
 
+// formatē tekstu bold un italic
 .bold-italic{
 	font-weight: bold;
 	font-style: italic;
 }
 
-.text{
+// p elementa formatējums
+p {
     margin: 24px 0px;
 }
 
+// formatējums div, kas ietver ievades laukus
 .input-block {
 	display: flex;
 	width: 100%;
@@ -64,7 +65,7 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-
+// input un textarea formatējums
 input, textarea {
     display: inline-flex;
 	box-sizing: border-box;
@@ -76,30 +77,36 @@ input, textarea {
 	font-size: $font-size;
 	border-radius: 7px;
 	border-width: 2px;
+    border-color: $dark-color;
 }
 
+// formatējums div, kas ietver vērtējuma ievades lauku
 .rating-input {
     width: 72px;
     padding: 2%;
     text-align: center;
 }
 
+// vērtējuma ievades lauka formatējums
 .rating {
     justify-content: left;
     min-width: none;
     width: 90%;
 }
 
+// Ievadlauku placeholder formatējums
 input::placeholder, textarea::placeholder {
     font: $font-size $font;
     color: $light-color;
 }
 
+// idejas apraksta ievadlauka formatējums
 .description {
     height: 192px;
     text-align: start;
 }
 
+// pogu formatējums
 input[type=submit],input[type=button]{
     width: 208px;
     min-width: 124px;
@@ -108,4 +115,36 @@ input[type=submit],input[type=button]{
 	color: $button-text;
 	background-color: $button-color;
 	border-color: $button-border;
+
+    :hover {
+        cursor: pointer;
+    }
+}
+
+// tabulas līniju formatējums
+$table-border: 2px solid $dark-color;
+
+// tabulas formatējums
+table {
+    border: $table-border;
+    border-color: $dark-color;
+    border-collapse: collapse;
+    border-spacing: 0;
+    height: 48px;
+    width: 98.3%;
+    margin: 12px;
+    padding: 0px 0px 0px 12px;
+}
+
+// tabulas datu formatējums
+td {
+    padding: 6px;
+}
+
+// novieto līniju zem pirmās tabulas rindas
+tr:first-of-type {
+    td {
+        font-weight: bold;
+        border-bottom: $table-border;
+    }
 }

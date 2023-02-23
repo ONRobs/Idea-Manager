@@ -1,12 +1,11 @@
 body {
   font-family: Segoe UI, sans-serif;
-  font-weight: regular;
   font-size: 26px;
   color: #707070;
   padding: 20px;
 }
 
-.center, .block_table, .block_form {
+.center, .block_form {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -19,11 +18,6 @@ body {
   max-width: 828px;
   width: 50%;
   height: 50%;
-}
-
-.block_table {
-  width: 80%;
-  height: 90%;
 }
 
 .heading {
@@ -40,7 +34,7 @@ body {
   font-style: italic;
 }
 
-.text {
+p {
   margin: 24px 0px;
 }
 
@@ -65,6 +59,7 @@ input, textarea {
   font-size: 26px;
   border-radius: 7px;
   border-width: 2px;
+  border-color: #707070;
 }
 
 .rating-input {
@@ -102,4 +97,27 @@ input[type=submit], input[type=button] {
   color: white;
   background-color: #608FFC;
   border-color: #3469E5;
+}
+input[type=submit] :hover, input[type=button] :hover {
+  cursor: pointer;
+}
+
+table {
+  border: 2px solid #707070;
+  border-color: #707070;
+  border-collapse: collapse;
+  border-spacing: 0;
+  height: 48px;
+  width: 98.3%;
+  margin: 12px;
+  padding: 0px 0px 0px 12px;
+}
+
+td {
+  padding: 6px;
+}
+
+tr:first-of-type td {
+  font-weight: bold;
+  border-bottom: 2px solid #707070;
 }/*# sourceMappingURL=styles.css.map */
