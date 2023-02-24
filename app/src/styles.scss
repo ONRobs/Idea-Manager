@@ -25,7 +25,7 @@ body {
 }
 
 // index.html un rate.html galvenā bloka lielums un novietojums
-.block_form {
+.block-form {
     max-width: 828px;
     width: 50%;
     height: 50%;
@@ -115,10 +115,38 @@ input[type=submit],input[type=button]{
 	color: $button-text;
 	background-color: $button-color;
 	border-color: $button-border;
+    cursor: pointer;
+}
 
-    :hover {
-        cursor: pointer;
-    }
+//formatējums neredzamam popup logam
+.popup-screen {
+    margin:-20px;
+    z-index: 99999;
+    position: fixed;
+    background: rgba($color: #ffffff, $alpha: 0.1);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
+// klase kas padara popup logu redzamu
+.visible {
+    visibility: visible;
+}
+
+// "x" pogas formatējums
+.cross {
+    margin: 12px;
+    height: 30px;
+    color: $dark-color;
+    top: -36px;
+    right: 0px;
+    position: absolute;
+    cursor: pointer;
 }
 
 // tabulas līniju formatējums
@@ -131,20 +159,41 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
     height: 48px;
-    width: 98.3%;
+    width: 98.7%;
     margin: 12px;
     padding: 0px 0px 0px 12px;
 }
 
-// tabulas datu formatējums
-td {
+// tabulas header un datu formatējums
+td, th{
     padding: 6px;
 }
 
 // novieto līniju zem pirmās tabulas rindas
-tr:first-of-type {
-    td {
-        font-weight: bold;
-        border-bottom: $table-border;
+th {
+    text-align: left;
+    font-weight: bolder;
+    border-bottom: $table-border;
+}
+
+// tabulas ideju rindas formatējums
+td {
+    &:first-of-type{
+    cursor: pointer;
+    text-decoration: underline;
+    width: 60%;
+    &:hover{
+        color: $light-color;
+        text-decoration: none;
+        }
     }
 }
+
+// error lapa
+#error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
