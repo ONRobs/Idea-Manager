@@ -1,17 +1,29 @@
 import { useState } from "react"
 import Cross from './media/Cross.svg';
 
+const idea = {
+    idea: "A project management app.",
+    description: "An app that lets you write down ideas and rate them a couple days after you have written them. It will then take the rating and tags into account and sort them all neatly! :)",
+    date_created: "2023-02-21",
+    rating: 9
+}
+
+const startNewIdeaValue = {
+    idea: "",
+    description: "",
+    date_created: "",
+    rating: 0
+}
+
 export default function Table() {
     const [visibility, setVisibility] = useState("false");
-
-    function test() {
-        console.log(123)
-    }
 
     const handleClick = event => {
         setVisibility(current => !current);
       };
-
+    
+    const [newIdeaValue, setNewIdeaValue] = useState(startNewIdeaValue)
+    
     return(
         <>
             {/* popup logs */}
@@ -20,13 +32,13 @@ export default function Table() {
                     {/* "x" poga */}
                     <img src={Cross} alt="" className="cross" onClick={handleClick}/>
                     {/* Virsraksts */}
-                    <div className="heading sub-heading bold-italic">A project management app.</div>
+                    <div className="heading sub-heading bold-italic">{idea.idea}</div>
                     {/* Teksts */}
-                    <p className="text">An app that lets you write down ideas and rate them a couple days after you have written them. It will then take the rating and tags into account and sort them all neatly! :)</p>
+                    <p className="text">{idea.description}</p>
                     {/* vērtējums */}
-                    <div className="text">Rating: 9</div>
+                    <div className="text">Rating: {idea.rating}</div>
                     {/* datums */}
-                    <div className="text">Date created: 21.02.2023.</div>
+                    <div className="text">Date created: {idea.date_created}</div>
                 </div>
             </div>
             <div className="block_table">
@@ -48,34 +60,16 @@ export default function Table() {
                         <tr>
                             <th>Idea</th>
                             <th>Tags</th>
-                            <th onClick={test}>Date</th>
-                            <th onClick={test}>Rating</th>
+                            <th>Date</th>
+                            <th>Rating</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td onClick={handleClick}>A project management app.</td>
+                            <td onClick={handleClick}>{idea.idea}</td>
                             <td>School, Work</td>
-                            <td>21.02.2023.</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <td>A game about cooking in a world of monsters.</td>
-                            <td>Games, Creative</td>
-                            <td>11.11.2022.</td>
-                            <td>6</td>
-                        </tr>
-                        <tr>
-                            <td>A joke about kittens.</td>
-                            <td>Jokes, Creative, Cats</td>
-                            <td>16.10.2022.</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>A story about a post-apocalyptic game show.</td>
-                            <td>Stories, Creative</td>
-                            <td>21.02.2023.</td>
-                            <td>0</td>
+                            <td>{idea.date_created}</td>
+                            <td>{idea.rating}</td>
                         </tr>
                     </tbody>
                 </table>

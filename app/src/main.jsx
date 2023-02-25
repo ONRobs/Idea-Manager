@@ -10,11 +10,14 @@ import "./styles.css";
 import Index from "./routes/index";
 import Rate from './routes/rate';
 import Table from './routes/table';
+import Test from './routes/test'
+import ErrorPage from "./error-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "rate/",
@@ -23,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "table/",
     element: <Table />,
+  },
+  {
+    path: "test/",
+    element: <Test />,
   },
 ]);
 

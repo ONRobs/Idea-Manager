@@ -124,7 +124,7 @@ input[type=submit],input[type=button]{
     z-index: 99999;
     position: fixed;
     background: rgba($color: #ffffff, $alpha: 0.1);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     width: 100%;
     height: 100%;
     display: flex;
@@ -178,8 +178,8 @@ th {
 
 // tabulas ideju rindas formatējums
 td {
-    &:first-of-type{
-    cursor: pointer;
+    &:first-of-type
+    {cursor: pointer;
     text-decoration: underline;
     width: 60%;
     &:hover{
@@ -196,4 +196,4 @@ td {
     align-items: center;
     justify-content: center;
     width: 100%;
-  }
+}
