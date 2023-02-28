@@ -14,7 +14,7 @@ const startNewTagValue = {
 export default function Index() {
   const [newIdeaValue, setNewIdeaValue] = useState(startNewIdeaValue)
   const [newTagValue, setNewTagValue] = useState(startNewTagValue)
-
+  
   function handleSubmit(event) {
     event.preventDefault()
     const currentDate = new Date().toLocaleDateString(

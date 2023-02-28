@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -7,11 +8,11 @@ import {
 
 import "./styles.css"; 
 
-import Index from "./routes/index";
-import Rate from './routes/rate';
-import Table from './routes/table';
-import Test from './routes/test'
-import ErrorPage from "./error-page";
+import Index from "./views/index";
+import Rate from './views/rate';
+import Table from './views/table';
+import Test from './views/test'
+import ErrorPage from "./views/error-page";
 
 const router = createBrowserRouter([
   {
@@ -22,14 +23,17 @@ const router = createBrowserRouter([
   {
     path: "rate/",
     element: <Rate />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "table/",
     element: <Table />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "test/",
     element: <Test />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
@@ -38,3 +42,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <RouterProvider router={router} />
   </React.StrictMode>,
 )
+

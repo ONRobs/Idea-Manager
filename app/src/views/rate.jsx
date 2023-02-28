@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from 'axios';
 
 const idea = {
-    idea: "A project management app.",
+    idea: "An idea management app.",
     description: "An app that lets you write down ideas and rate them a couple days after you have written them. It will then take the rating and tags into account and sort them all neatly! :)",
     date_created: "2023-02-21",
     rating: 9
@@ -12,6 +13,13 @@ const startNewRatingValue = {
 }
 
 export default function Rate() {
+
+    useEffect(() => {
+        axios.get('http://localhost:3004/')
+        .then((response) => {
+            console.log(response.data)
+        })
+      }, [])
 
     const [newRatingValue, setNewRatingValue] = useState(startNewRatingValue)
 
