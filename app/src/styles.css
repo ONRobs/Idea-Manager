@@ -36,7 +36,6 @@ body {
   width: 20%;
   list-style: none;
   display: flex;
-  gap: 1rem;
 }
 .nav a {
   color: inherit;
