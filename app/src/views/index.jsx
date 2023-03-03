@@ -1,10 +1,10 @@
 import { useState } from "react"
+import axios from "axios"
 
+// tukši objekti
 const startNewIdeaValue = {
   idea: "",
   description: "",
-  date_created: "",
-  rating: 0
 }
 
 const startNewTagValue = {
@@ -15,27 +15,27 @@ export default function Index() {
   const [newIdeaValue, setNewIdeaValue] = useState(startNewIdeaValue)
   const [newTagValue, setNewTagValue] = useState(startNewTagValue)
   
+  // atbild par submit pogas nospiešanu
   function handleSubmit(event) {
-    event.preventDefault()
-    const currentDate = new Date().toLocaleDateString(
-      "en-CA",
-      {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }
-    );
-    const newIdeaWithDate = { ...newIdeaValue, date_created: currentDate };
-    setNewIdeaValue(newIdeaWithDate);
+    event.preventDefault();
+    // formatē tags lai izveidotu array
     const tags = newTagValue.tag.split(",").map(tag => tag.trim());
-    console.log("Form Submit", newIdeaWithDate, tags);
+    
+    // ieliek ievadītās vērtības objektā
+    const data = {
+      Idea: newIdeaValue.idea,
+      Description: newIdeaValue.description,
+      Tag: tags
+    };
+    
+    // nosūta objektu ar ievadītajām vērtībām uz serveri
+    axios.post('http://localhost:3004/ideas', data)
+      .then(response => console.log(response))
+      .catch(error => console.error(error));
+    
+    // ievadlaukus uztaisa tukšus
     setNewIdeaValue(startNewIdeaValue);
-    setNewTagValue(startNewTagValue)
-  }
-
-  function handleTagInputChange(event) {
-    const updatedNewTagValue = { ...newTagValue, tag: event.target.value };
-    setNewTagValue(updatedNewTagValue);
+    setNewTagValue(startNewTagValue);
   }
 
   return (
@@ -78,7 +78,10 @@ export default function Index() {
               placeholder="Tags: School, Work, Cats, ..."
               autoComplete="off"
               value={newTagValue.tag}
-              onChange={handleTagInputChange}
+              onChange={(event) => {
+                const updatedNewTagValue = { ...newTagValue, tag: event.target.value };
+                setNewTagValue(updatedNewTagValue);
+              }}
               required
             />
             {/* "Submit" poga */}

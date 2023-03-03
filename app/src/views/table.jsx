@@ -1,52 +1,61 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Cross from '../assets/Cross.svg';
-  
-const idea = {
-    idea: "A project management app.",
-    description: "An app that lets you write down ideas and rate them a couple days after you have written them. It will then take the rating and tags into account and sort them all neatly! :)",
-    date_created: "2023-02-21",
-    rating: 9
-}
-
-const startNewIdeaValue = {
-    idea: "",
-    description: "",
-    date_created: "",
-    rating: 0
-}
+import axios from 'axios';
 
 export default function Table() {
-    const [visibility, setVisibility] = useState("false");
+    const [idea, setIdea] = useState([]);
+    const [popupData, setPopupData] = useState([]);
+    const [visibility, setVisibility] = useState(true);
+    const [tags, setTags] = useState("")
 
-    const handleClick = event => {
-        setVisibility(current => !current);
-      };
+    // iegūst datus no servera
+    useEffect(() => {
+        axios.get('http://localhost:3004/ideas')
+            .then(response => {
+                setIdea(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
     
-    const [newIdeaValue, setNewIdeaValue] = useState(startNewIdeaValue)
+    // formatē Tag vērtības, lai tās būtu atdalītas ar ", " popup logā
+    useEffect(() => {
+        if (popupData && popupData.Tags) {
+          setTags(popupData.Tags.split(",").map(tag => tag.trim()).join(", "));
+        }
+    }, [popupData]);
+      
+    // atver popup logu attiecīgajai idejai
+    const handleClick = event => {
+        const ideaId = event.target.parentNode.dataset.ideaId;
+        const clickedIdea = idea.find(idea => idea.Idea_ID === parseInt(ideaId));
+        setPopupData(clickedIdea);
+        setVisibility(false);
+    }
+
+    // atbild par popup loga aizvēršanu
+    const handleClose = event => {
+        setTags("")
+        setPopupData([])
+        setVisibility(true)
+    }
     
     return(
         <>
             {/* popup logs */}
-            <div className={visibility ? 'popup-screen' : 'popup-screen  visible'}>
+            <div className={visibility ? 'popup-screen' : 'popup-screen visible'}>
                 <div className="block-form">
-                    {/* "x" poga */}
-                    <img src={Cross} alt="" className="cross" onClick={handleClick}/>
-                    {/* Virsraksts */}
-                    <div className="heading sub-heading bold-italic">{idea.idea}</div>
-                    {/* Teksts */}
-                    <p className="text">{idea.description}</p>
-                    {/* vērtējums */}
-                    <div className="text">Rating: {idea.rating}</div>
-                    {/* datums */}
-                    <div className="text">Date created: {idea.date_created}</div>
+                    <img src={Cross} alt="" className="cross" onClick={handleClose} />
+                    <div className="heading sub-heading bold-italic">{popupData.Idea}</div>
+                    <p className="text">{popupData.Description}</p>
+                    <div className="text">Tags: {tags}</div>
+                    <div className="text">Rating: {popupData.Rating}</div>
+                    <div className="text">Date created: {popupData.Date_Created}</div>
                 </div>
             </div>
-            <div className="block_table">
+            <div className="block-table">
                 <form>
-                    {/* Jaunas idejas poga */}
-                    <div className="input-block">
-                        <input type="button" value="Add New Idea" />
-                    </div>
                     <div className="input-block">
                         {/* idejas meklēšanas lauks */}
                         <input name="search-idea" placeholder="Search for an Idea:" autoComplete="off" />
@@ -56,6 +65,7 @@ export default function Table() {
                 </form>
 
                 <table>
+                    {/* tabulas kolonnu virsraksti */}
                     <thead>
                         <tr>
                             <th>Idea</th>
@@ -64,13 +74,16 @@ export default function Table() {
                             <th>Rating</th>
                         </tr>
                     </thead>
+                    {/* tabulas rindas */}
                     <tbody>
-                        <tr>
-                            <td onClick={handleClick}>{idea.idea}</td>
-                            <td>School, Work</td>
-                            <td>{idea.date_created}</td>
-                            <td>{idea.rating}</td>
-                        </tr>
+                        {idea.map(idea => (
+                            <tr key={idea.Idea_ID} data-idea-id={idea.Idea_ID}>
+                            <td onClick={handleClick}>{idea.Idea}</td>
+                            <td>{idea.Tags.split(",").map(tag => tag.trim()).join(", ")}</td>
+                            <td>{idea.Date_Created}</td>
+                            <td>{idea.Rating}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
