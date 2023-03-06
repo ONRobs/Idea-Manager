@@ -147,16 +147,22 @@ app.put('/rate/:id/rating', (req, res) => {
 });
 
 // GET route lai atgrieztu Idea_ID, Idea, Description, Date_Created, Rating, Tag
-// kārtoti pēc datuma
+// kārtoti un meklēti pēc vērtībām, kas iegūtas no frontend
 app.get('/ideas', (req, res) => {
+  const sortBy = req.query._sort || 'Rating';
+  const sortOrder = req.query._order || 'asc';
+  const searchIdea = req.query.idea_like || '';
+  const searchTags = req.query.tags_like || '';
+
   database.all(
     `SELECT Ideas.Idea_ID, Ideas.Idea, Ideas.Description, Ideas.Date_Created, Ideas.Rating,
-    GROUP_CONCAT(Tags.Tag, ',') as Tags
+    GROUP_CONCAT(Tags.Tag, ', ') as Tags
     FROM Ideas
     LEFT JOIN Ideas_Tags ON Ideas.Idea_ID = Ideas_Tags.Idea_ID
     LEFT JOIN Tags ON Ideas_Tags.Tag_ID = Tags.Tag_ID
+    WHERE Ideas.Idea LIKE '%${searchIdea}%' AND Tags.Tag LIKE '%${searchTags}%'
     GROUP BY Ideas.Idea_ID
-    ORDER BY Ideas.Date_Created ASC`,
+    ORDER BY ${sortBy} ${sortOrder}`,
     (err, rows) => {
       if (err) {
         console.error(err.message);
@@ -167,7 +173,7 @@ app.get('/ideas', (req, res) => {
     }
   );
 });
-  
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

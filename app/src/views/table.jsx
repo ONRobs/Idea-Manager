@@ -1,177 +1,186 @@
-import { useEffect, useState } from "react"
-import Trash from '../assets/Trash.svg';
-import Edit from '../assets/Edit.svg';
-import Cross from '../assets/Cross.svg';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import qs from 'query-string'
+import axios from "axios";
 
-export default function Table() {
+// popup logs
+import Popup from "../components/popup";
+
+// izveido kolonnu virsrakstus
+const HeaderCell = ({ column, sorting, sortTable }) => {
+    // neļaus kārtot pēc Idea un Tags
+    const isSortable = column !== "Idea" && column !== "Tags";
+    // ja pēc kolonnas kārto, piešķir tam atbilstošo bultiņas un saglabā kārtošanas secību
+    const isDescSorting = sorting.column === column && sorting.order === "desc";
+    const isAscSorting = sorting.column === column && sorting.order === "asc";
+    // ja th spiedīs vairākas reizes, mainīsies starp ascending un descending
+    const futureSortingOrder = isDescSorting ? "asc" : "desc";
+    
+    // nosaka nākamo kārtošanas secību
+    const handleClick = () => {
+        if (isSortable) {
+            sortTable({ column, order: futureSortingOrder });
+        }
+    };
+  
+    // izveido kolonnu headers
+    return (
+        <th onClick={handleClick}>
+            {column === "Date_Created" ? "Date" : column}
+            {/* piešķir vienu no divām bultiņām */}
+            {isSortable && (
+                <>
+                    {isDescSorting && <span> ▼ </span>}
+                    {isAscSorting && <span> ▲ </span>}
+                </>
+            )}
+        </th>
+    );
+};
+  
+// atbild par pareizu tabulas kārtošanos
+const Header = ({ columns, sorting, sortTable }) => {
+    return(
+        <thead>
+            <tr>
+                {columns.map((column) => (
+                    <HeaderCell column={column} sorting={sorting} key={column} sortTable={sortTable} />
+                ))}
+            </tr>
+        </thead>
+    );
+};
+
+// no datubāzes ieliek tabulā datus
+const Content = ({ entries, columns, setSelectedIdea, setVisibility }) => {  
+    // atgriež vērtības, kuras izmantos popup komponentā
+    const handleClick = (entry) => {
+        setSelectedIdea(entry);
+        setVisibility(true);
+    };
+    
+    // ievieto tabulā datus
+    return (
+        <tbody>
+            {entries.map((entry) => (
+                <tr key={entry.Idea_ID}>
+                    {columns.map((column) => (
+                        <td
+                            key={column}
+                            // ja klikšina uz kolonnu, izpaudīsies handleClick funkcija
+                            onClick={column === "Idea" ? () => handleClick(entry) : null}
+                        >
+                            {entry[column]}
+                        </td>
+                    ))}
+                </tr>
+            ))}
+        </tbody>
+    );
+};
+
+// meklēšanas ievadlauku izveide
+const SearchBar = ({ searchTable }) => {
+    const [searchValue, setSearchValue] = useState({
+        searchIdea: "",
+        searchTags: "",
+    });
+    
+    // mainoties lauku vērtībām, tiks saglabātas meklēšanas vērtības un tiks meklēts tabulā
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setSearchValue((prevSearchValue) => ({
+            ...prevSearchValue,
+            [name]: value,
+        }));
+        searchTable({
+            ...searchValue,
+            [name]: value,
+        });
+    };
+    
+    // atgriež ievadlaukus
+    return (
+        <form>
+            <div className="input-block">
+                <input
+                    type="text"
+                    className="table-input"
+                    placeholder="Search for an Idea:"
+                    autoComplete="off"
+                    name="searchIdea"
+                    value={searchValue.searchIdea}
+                    onChange={handleChange}
+                />
+                <input
+                    type="text"
+                    className="table-input"
+                    placeholder="Search for a Tag:"
+                    autoComplete="off"
+                    name="searchTags"
+                    value={searchValue.searchTags}
+                    onChange={handleChange}
+                />
+            </div>
+        </form>
+    );
+};  
+
+// atgriež tabulas lapu
+export default function IdeaTable () {
+    // kur tiks glabātas idejas
     const [idea, setIdea] = useState([]);
-    const [tags, setTags] = useState("")
-    // popup logam
-    const [visibility, setVisibility] = useState(true);
-    const [popupData, setPopupData] = useState([]);
-    // meklēšanas laukiem
-    const [searchIdea, setSearchIdea] = useState("");
-    const [searchTags, setSearchTags] = useState("");
-    const [filteredIdea, setFilteredIdea] = useState([]);
-    // tabulas kārtošanai
-    const [sort, setSort] = useState(null);
-
-    // iegūst datus no servera
+    // tabulas kārtošanas vērtības ar pamata vērtībām
+    const [sorting, setSorting] = useState({column: 'Date_Created', order: 'desc'})
+    // tabulas meklēšanas vērtības
+    const [searchValue, setSearchValue] = useState({searchIdea: '', searchTags: ''})
+    // izvēlētā ideja, kura tiks rādīta popup elementā
+    const [selectedIdea, setSelectedIdea] = useState(null);
+    // popup elementa redzamība
+    const [visibility, setVisibility] = useState(false);
+    // tabulas kolonnas
+    const columns = ['Idea', 'Tags', 'Date_Created', 'Rating']
+  
+    // kārtošana
+    const sortTable = (newSorting) => {
+        setSorting(newSorting)
+    }
+    // meklēšana
+    const searchTable = (newSearchValue) => {
+        setSearchValue(newSearchValue)
+    }
+    // datu iegūšana no datubāzes
     useEffect(() => {
-        axios.get('http://localhost:3004/ideas')
+        // datubāzes query veidošana
+        const query = qs.stringify({
+            _sort: sorting.column,
+            _order: sorting.order,
+            idea_like: searchValue.searchIdea,
+            tags_like: searchValue.searchTags,
+        });
+        // datubāzes url
+        const url = `http://localhost:3004/ideas?${query}`;
+        // datu iegūšana
+        axios.get(url)
             .then(response => {
                 setIdea(response.data);
-                setFilteredIdea(response.data);
             })
             .catch(error => {
                 console.log(error);
             });
-    }, []);
-
-    // formatē Tag vērtības, lai tās būtu atdalītas ar ", " popup logā
-    useEffect(() => {
-        if (popupData && popupData.Tags) {
-          setTags(popupData.Tags.split(",").map(tag => tag.trim()).join(", "));
-        }
-    }, [popupData, filteredIdea]);
-
-    // atver popup logu attiecīgajai idejai
-    const handleClick = event => {
-        const ideaId = event.target.parentNode.dataset.ideaId;
-        const clickedIdea = filteredIdea.find(idea => idea.Idea_ID === parseInt(ideaId));
-        setPopupData(clickedIdea);
-        setVisibility(false);
-    }
-
-    // atbild par popup loga aizvēršanu
-    const handleClose = event => {
-        setTags("")
-        setPopupData([])
-        setVisibility(true)
-    }
-
-    // filtrē ideju sarakstu pēc meklēšanas vērtībām
-    useEffect(() => {
-        let newFilteredIdea = idea;
-        if (searchIdea !== "") {
-            newFilteredIdea = newFilteredIdea.filter(
-                idea => idea.Idea.toLowerCase().includes(searchIdea.toLowerCase())
-            );
-        }
-        if (searchTags !== "") {
-            newFilteredIdea = newFilteredIdea.filter(
-                idea => idea.Tags.toLowerCase().includes(searchTags.toLowerCase())
-            );
-        }
-
-        setFilteredIdea(newFilteredIdea);
-    }, [idea, searchIdea, searchTags]);
-
-    // atbild par Idea meklēšanas ievadlauka izmaiņām
-    const handleSearchChange = event => {
-        setSearchIdea(event.target.value);
-    };
-
-    // atbild par Tag meklēšanas ievadlauka izmaiņām
-    const handleTagSearchChange = event => {
-        setSearchTags(event.target.value);
-    };
-
-    // atbild par lauku kārtošanu tabulā
-    const sortIdeaList = () => {
-        const sortedIdea = [...filteredIdea];
-        if (sort) {
-            sortedIdea.sort((a, b) => {
-                const columnA = a[sort.column];
-                const columnB = b[sort.column];
-                if (columnA < columnB) {
-                    return sort.direction === 'asc' ? -1 : 1;
-                } else if (columnA > columnB) {
-                    return sort.direction === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-        return sortedIdea;
-    }
+    }, [sorting, searchValue]);
     
-    // atbild par to, pēc kura lauka tiek kārtots
-    const handleSort = (column) => {
-        const newSort = {
-            column,
-            direction: sort && sort.direction === 'asc' ? 'desc' : 'asc',
-        };
-        setSort(newSort);
-    }
-      
-    // izmanto atgriezto sakārtoto tabulu
-    useEffect(() => {
-        setFilteredIdea(sortIdeaList());
-    }, [idea, searchIdea, searchTags, sort]);
-      
-
+    // atgriež Popup, Meklēšanas laukus un tabulu
     return(
         <>
-            {/* popup logs */}
-            <div className={visibility ? 'popup-screen' : 'popup-screen visible'}>
-                <div className="block-form">
-                    <div>
-                        <div>
-                            <img src="" alt="" />
-                        </div>
-                        <img src={Cross} alt="" className="cross" onClick={handleClose} />
-                    </div>
-                    <div className="heading sub-heading bold-italic">{popupData.Idea}</div>
-                    <p className="text">{popupData.Description}</p>
-                    <div className="text">Tags: {tags}</div>
-                    <div className="text">Rating: {popupData.Rating}</div>
-                    <div className="text">Date created: {popupData.Date_Created}</div>
-                </div>
-            </div>
+            <Popup visibility={visibility} setVisibility={setVisibility} selectedIdea={selectedIdea} />
             <div className="block-table">
-                <form>
-                    <div className="input-block">
-                        {/* Idea meklēšanas lauks */}
-                        <input 
-                            name="search-idea" 
-                            placeholder="Search for an Idea:" 
-                            autoComplete="off"
-                            value={searchIdea}
-                            onChange={handleSearchChange}
-                        />
-                        {/* Tag meklēšanas lauks */}
-                        <input 
-                            name="search-tags" 
-                            placeholder="Search for Tags:" 
-                            autoComplete="off" 
-                            value={searchTags}
-                            onChange={handleTagSearchChange}
-                        />
-                    </div>
-                </form>
-                <table>
-                    {/* tabulas kolonnu virsraksti */}
-                    <thead>
-                        <tr>
-                            <th onClick={() => handleSort('Idea')}>Idea</th>
-                            <th>Tags</th>
-                            <th onClick={() => handleSort('Date_Created')}>Date</th>
-                            <th onClick={() => handleSort('Rating')}>Rating</th>
-                        </tr>
-                    </thead>
-                    {/* tabulas rindas */}
-                    <tbody>
-                        {filteredIdea.map(idea => (
-                            <tr key={idea.Idea_ID} data-idea-id={idea.Idea_ID}>
-                                <td onClick={handleClick}>{idea.Idea}</td>
-                                <td>{idea.Tags.split(",").map(tag => tag.trim()).join(", ")}</td>
-                                <td>{idea.Date_Created}</td>
-                                <td>{idea.Rating}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <SearchBar searchTable={searchTable}/>
+                <div className="scrollbar" style={{position: "absolute", height: "85%"}}>
+                    <table>
+                        <Header columns={columns} sorting={sorting} sortTable={sortTable} />
+                        <Content entries={idea} columns={columns} setSelectedIdea={setSelectedIdea} setVisibility={setVisibility} />
+                    </table>
+                </div>
             </div>
         </>
     );
