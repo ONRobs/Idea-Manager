@@ -9,6 +9,9 @@ $heading-size: 48px;
 
 html {
     width: 100%;
+    background-attachment: fixed;
+    background-image: url("./assets/Background.svg");
+    background-size: cover;
 }
 
 body {
@@ -241,6 +244,7 @@ table {
     border-spacing: 0;
     height: 48px;
     width: 100%;
+    background-color: $button-text;
 }
 
 // tabulas header un datu formatējums
