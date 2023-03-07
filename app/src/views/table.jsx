@@ -168,6 +168,25 @@ export default function IdeaTable () {
                 console.log(error);
             });
     }, [sorting, searchValue]);
+
+    // kad visibility nomainās uz false, pārlādē tabulu
+    useEffect(() => {
+        if (!visibility) {
+            const query = qs.stringify({
+                _sort: sorting.column,
+                _order: sorting.order,
+                idea_like: searchValue.searchIdea,
+                tags_like: searchValue.searchTags,
+            });
+            const url = `http://localhost:3004/ideas?${query}`;
+            setIdea([]);
+            async function fetchData() {
+                const { data } = await axios.get(url);
+                setIdea(data);
+            }
+            fetchData();
+        }
+    }, [sorting, searchValue, visibility]);
     
     // atgriež Popup, Meklēšanas laukus un tabulu
     return(

@@ -174,6 +174,19 @@ app.get('/ideas', (req, res) => {
   );
 });
 
+app.delete('/ideas/:id', (req, res) => {
+  const ideaID = req.params.id;
+
+  database.run('DELETE FROM Ideas WHERE Idea_ID = ?', [ideaID], function (err) {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    } else {
+      res.status(200).send('Success');
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

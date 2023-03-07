@@ -184,10 +184,10 @@ input[type=submit], input[type=button], button[type=submit] {
   height: 34px;
   position: relative;
   cursor: pointer;
+  margin-left: auto;
 }
 
 .icon {
-  margin-right: 12px;
   height: 38px;
   position: relative;
   cursor: pointer;
