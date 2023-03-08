@@ -1,7 +1,7 @@
 # Idea-Manager
 Ideju menedžēšanas sistēma, kas ļauj tev ievadīt jaunas idejas, uzrakstīt aprakstus, tagus, izvērtēt tās. Idejas ir iespējams apskatīt tabulā, kur tās var meklēt pēc idejas vai taga, vai arī kārtot tos pēc datuma vai vērtējuma. Uzklikšķinot uz idejas, ir iespējams apskatīt sīkāku informāciju.
 Pielaides darbs 2023 gada programmēšanas eksāmenam.
-# Kā sākt sistēmu?
+# Kā sākt programmu?
 ## Front-end
 Terminālī ierakstīt šo lai sāktu serveri:
 ```
