@@ -1,2 +1,2 @@
-# sqllite_js_boilerplate
-To start run `npm install` and afterwards `npm run start:nodemon`
+# backend
+lai sāktu: `npm install` `npm run start:nodemon`
