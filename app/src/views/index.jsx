@@ -1,6 +1,5 @@
 import { useState } from "react"
 import axios from "axios"
-import Background from "../assets/Background.svg"
 
 // tukši objekti
 const startNewIdeaValue = {
